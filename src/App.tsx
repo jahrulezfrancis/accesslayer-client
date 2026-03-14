@@ -1,15 +1,20 @@
-import './App.css';
+import { Toaster } from 'react-hot-toast';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+import LandingPage from './pages/LandingPage';
+
+const router = createBrowserRouter([
+	{
+		path: '/',
+		element: <LandingPage />,
+	},
+]);
 
 function App() {
 	return (
-		<main className="landing-shell">
-			<div className="landing-orb landing-orb-left" />
-			<div className="landing-orb landing-orb-right" />
-			<section className="landing-card">
-				<p className="landing-eyebrow">Creator Keys Marketplace</p>
-				<h1 className="landing-title">Access Layer</h1>
-			</section>
-		</main>
+		<>
+			<Toaster />
+			<RouterProvider router={router} />
+		</>
 	);
 }
 
