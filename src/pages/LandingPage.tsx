@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { courseService, type Course } from '@/services/course.service';
 import SearchBar from '@/components/common/SearchBar';
+import StickyFilterBar from '@/components/common/StickyFilterBar';
 import CreatorCard from '@/components/common/CreatorCard';
 import { CreatorGridSkeleton } from '@/components/common/CreatorSkeleton';
 import EmptyState from '@/components/common/EmptyState';
@@ -125,19 +126,23 @@ function LandingPage() {
 					<h1 className="mb-8 font-grotesque text-[clamp(2.5rem,8vw,5rem)] font-extrabold leading-[1.1] tracking-tight text-white">
 						Access Layer
 					</h1>
-					
-					{/* Search Bar Integration */}
-					<div className="mx-auto flex max-w-2xl justify-center">
-						<SearchBar 
-							value={searchQuery} 
-							onChange={setSearchQuery} 
-							className="shadow-2xl shadow-black/20"
-						/>
-					</div>
 				</header>
 
+				<StickyFilterBar
+					eyebrow="Marketplace filters"
+					title="Find creators without losing your place"
+					description="Search by creator name or handle while you keep scrolling through the marketplace. The filter shell stays visible and compresses as you move deeper into the list."
+					resultCount={filteredCreators.length}
+				>
+					<SearchBar
+						value={searchQuery}
+						onChange={setSearchQuery}
+						className="max-w-none shadow-2xl shadow-black/20"
+					/>
+				</StickyFilterBar>
+
 				{/* Marketplace Grid Section */}
-				<section className="mt-12">
+				<section className="mt-2">
 					{isLoading ? (
 						<CreatorGridSkeleton count={6} />
 					) : filteredCreators.length > 0 ? (

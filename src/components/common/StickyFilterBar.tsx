@@ -1,0 +1,126 @@
+import { useEffect, useState, type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+
+interface StickyFilterBarProps {
+	eyebrow?: string;
+	title: string;
+	description?: string;
+	resultCount?: number;
+	children: ReactNode;
+	className?: string;
+}
+
+const COMPACT_SCROLL_Y = 96;
+
+const StickyFilterBar: React.FC<StickyFilterBarProps> = ({
+	eyebrow = 'Filters',
+	title,
+	description,
+	resultCount,
+	children,
+	className,
+}) => {
+	const [isCompact, setIsCompact] = useState(() =>
+		typeof window !== 'undefined' ? window.scrollY > COMPACT_SCROLL_Y : false
+	);
+
+	useEffect(() => {
+		if (typeof window === 'undefined') {
+			return;
+		}
+
+		let ticking = false;
+
+		const updateCompactState = () => {
+			ticking = false;
+			const nextIsCompact = window.scrollY > COMPACT_SCROLL_Y;
+			setIsCompact(prev => (prev === nextIsCompact ? prev : nextIsCompact));
+		};
+
+		const onScroll = () => {
+			if (ticking) {
+				return;
+			}
+
+			ticking = true;
+			window.requestAnimationFrame(updateCompactState);
+		};
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+
+		return () => {
+			window.removeEventListener('scroll', onScroll);
+		};
+	}, []);
+
+	return (
+		<div
+			className={cn(
+				'sticky top-4 z-20 mb-10 transition-all duration-300 md:top-6',
+				className
+			)}
+		>
+			<div
+				className={cn(
+					'relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-slate-950/78 text-white shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-all duration-300',
+					isCompact
+						? 'px-4 py-4 md:px-5 md:py-4'
+						: 'px-5 py-5 md:px-7 md:py-6'
+				)}
+			>
+				<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02)_48%,rgba(245,158,11,0.08))]" />
+
+				<div className="relative flex flex-col gap-4">
+					<div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+						<div className="min-w-0">
+							<p className="text-[0.68rem] font-bold uppercase tracking-[0.28em] text-amber-300/85">
+								{eyebrow}
+							</p>
+							<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+								<h2
+									className={cn(
+										'font-grotesque font-bold tracking-tight text-white transition-all duration-300',
+										isCompact ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'
+									)}
+								>
+									{title}
+								</h2>
+								{typeof resultCount === 'number' && (
+									<span className="inline-flex items-center rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs font-medium text-white/75">
+										{resultCount} {resultCount === 1 ? 'result' : 'results'}
+									</span>
+								)}
+							</div>
+							{description && (
+								<p
+									className={cn(
+										'mt-2 max-w-2xl text-sm text-white/62 transition-all duration-300',
+										isCompact
+											? 'max-h-0 overflow-hidden opacity-0'
+											: 'max-h-20 opacity-100'
+									)}
+								>
+									{description}
+								</p>
+							)}
+						</div>
+					</div>
+
+					<div
+						className={cn(
+							'flex flex-col gap-3 transition-all duration-300 md:flex-row md:items-center md:justify-between',
+							isCompact ? 'gap-2' : 'gap-3'
+						)}
+					>
+						<div className="w-full md:max-w-2xl">{children}</div>
+						<span className="hidden text-xs font-medium uppercase tracking-[0.18em] text-white/45 md:inline-flex">
+							{isCompact ? 'Filters stay pinned while you browse' : 'Scroll to keep filters in reach'}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default StickyFilterBar;
