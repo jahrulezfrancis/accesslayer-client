@@ -7,6 +7,7 @@ import { CreatorGridSkeleton } from '@/components/common/CreatorSkeleton';
 import EmptyState from '@/components/common/EmptyState';
 import { Button } from '@/components/ui/button';
 import { UnavailableAction } from '@/components/ui/unavailable-action';
+import SectionHeading from '@/components/common/SectionHeading';
 
 // Fallback demo data in case API fails
 const DEMO_CREATORS: Course[] = [
@@ -139,7 +140,6 @@ function LandingPage() {
 			<div className="absolute left-[-4rem] top-[10%] size-72 rounded-full bg-amber-300/20 blur-[100px]" />
 			<div className="absolute bottom-[8%] right-[-3rem] size-72 rounded-full bg-emerald-300/15 blur-[100px]" />
 			<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,186,73,0.1),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(74,222,128,0.08),transparent_35%)]" />
-
 			<div className="relative z-10 mx-auto max-w-7xl">
 				<header className="mb-16 text-center">
 					<img
@@ -178,6 +178,13 @@ function LandingPage() {
 				</StickyFilterBar>
 
 				<section className="mt-2">
+					<SectionHeading
+						title="Explore creators"
+						supportingText="Discover creator profiles and marketplace listings."
+						className="mb-7"
+						supportingTextClassName="max-w-3xl"
+					/>
+
 					{isLoading ? (
 						<CreatorGridSkeleton count={6} />
 					) : filteredCreators.length > 0 ? (
