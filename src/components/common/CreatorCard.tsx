@@ -57,7 +57,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 	return (
 		<div
 			className={cn(
-				'group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 md:hover:-translate-y-0.5 md:hover:border-amber-500/25 md:hover:bg-white/[0.08] md:hover:shadow-[0_12px_32px_-20px_rgba(251,191,36,0.5)]',
+				'group relative overflow-hidden rounded-2xl border cursor-pointer border-white/10 bg-white/5 p-4 transition-all duration-300 md:hover:-translate-y-0.5 md:hover:border-amber-500/25 md:hover:bg-white/[0.08] md:hover:shadow-[0_12px_32px_-20px_rgba(251,191,36,0.5)]',
 				className
 			)}
 		>
@@ -105,9 +105,9 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 					size="sm"
 					disabled={transactionState === 'submitting'}
 					className={cn(
-						'rounded-xl font-bold',
+						'rounded-xl font-bold cursor-pointer ',
 						!isConnected &&
-							'border-white/10 text-white/60 hover:bg-white/5'
+							'border-white/10  hover:bg-white/5'
 					)}
 				>
 					<ShoppingCart className="mr-2 size-4" />
