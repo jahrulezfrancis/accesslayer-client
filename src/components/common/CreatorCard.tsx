@@ -96,6 +96,24 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 				<p className="font-jakarta text-sm text-white/50">
 					@{creator.instructorId || 'creator'}
 				</p>
+
+				{creator.socialHandle ? (
+					<div className="mt-2 flex items-center gap-1.5 text-xs text-white/60">
+						<LinkIcon className="size-3 text-amber-500/70" />
+						<span className="truncate">@{creator.socialHandle}</span>
+					</div>
+				) : (
+					<div className="mt-2 flex items-center gap-1.5 text-xs text-white/30 italic">
+						<LinkIcon className="size-3 opacity-50" />
+						<span>No public handle</span>
+					</div>
+				)}
+
+				{/*  Sparkline placeholder */}
+                    <div className="mt-3">
+                   <div className="h-10 w-full rounded-lg bg-white/10 animate-pulse" />
+            </div>
+
 				<div className="mt-3 flex flex-wrap gap-2">
 					<MiniStatChip label="Price" value={`${creator.price} ETH`} />
 					<MiniStatChip
@@ -151,6 +169,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 					handle={creator.socialHandle}
 					className="mt-4"
 				/>
+
 			</div>
 
 			<div className="flex items-center justify-end gap-4">
