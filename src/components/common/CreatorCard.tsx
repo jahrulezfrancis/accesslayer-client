@@ -15,6 +15,7 @@ import CreatorSocialLinksList from '@/components/common/CreatorSocialLinksList';
 import TransactionStatusIcon from '@/components/common/TransactionStatusIcon';
 import MiniStatChip from '@/components/common/MiniStatChip';
 import Change24hBadge from '@/components/common/Change24hBadge';
+import KeySupplyBadge from '@/components/common/KeySupplyBadge';
 import CreatorListRowDivider from '@/components/common/CreatorListRowDivider';
 import BuyActionHelperText from '@/components/common/BuyActionHelperText';
 import CreatorLabeledStatRow from '@/components/common/CreatorLabeledStatRow';
@@ -104,6 +105,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 						reserveSpace={true}
 					/>
 					<Change24hBadge change={creator.change24h} />
+					<KeySupplyBadge supply={creator.creatorShareSupply} />
 				</div>
 				<p className="font-jakarta text-sm text-white/50">
 					@{creator.instructorId || 'creator'}
