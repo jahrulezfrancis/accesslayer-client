@@ -22,6 +22,7 @@ import CreatorListRowDivider from '@/components/common/CreatorListRowDivider';
 import BuyActionHelperText from '@/components/common/BuyActionHelperText';
 import CreatorLabeledStatRow from '@/components/common/CreatorLabeledStatRow';
 import { useTransactionTelemetry } from '@/hooks/useTransactionTelemetry';
+import { formatCompactNumber, formatNumber } from '@/utils/numberFormat.utils';
 
 interface CreatorCardProps {
 	creator: Course;
@@ -116,7 +117,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 						<TrendingUp className="size-3 text-emerald-400" />
 						<span className="text-xs font-bold text-white/90">
 							{creator.volume24h > 0
-								? `${creator.volume24h} ETH`
+								? `${formatCompactNumber(creator.volume24h)} ETH`
 								: 'New'}
 						</span>
 					</div>
@@ -157,7 +158,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 				</div>
 
 				<div className="mt-3 flex flex-wrap gap-2">
-					<MiniStatChip label="Price" value={`${creator.price} ETH`} />
+					<MiniStatChip label="Price" value={`${formatNumber(creator.price)} ETH`} />
 					<MiniStatChip
 						label="Category"
 						value={creator.category || 'General'}
@@ -170,7 +171,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 						label="Creator Share Supply"
 						value={
 							creator.creatorShareSupply
-								? `${creator.creatorShareSupply} shares`
+								? `${formatCompactNumber(creator.creatorShareSupply)} shares`
 								: 'Supply pending'
 						}
 						className="px-3 py-3"
@@ -202,7 +203,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 					/>
 					<CardMetaRow
 						label="Key Price"
-						value={`${creator.price} ETH`}
+						value={`${formatNumber(creator.price)} ETH`}
 						truncateValue={false}
 						valueClassName="font-grotesque text-base font-black text-amber-400"
 					/>
