@@ -108,6 +108,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 			<div className="relative mb-4 aspect-square overflow-hidden rounded-xl">
 				<CreatorInitialsAvatar
 					name={creator.title}
+					creatorId={creator.id}
 					imageSrc={creator.thumbnail}
 					imageClassName="transition-transform duration-500 md:group-hover:scale-[1.03]"
 				/>
