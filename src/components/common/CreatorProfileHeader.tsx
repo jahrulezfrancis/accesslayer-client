@@ -9,6 +9,7 @@ import CreatorInitialsAvatar from '@/components/common/CreatorInitialsAvatar';
 interface CreatorProfileHeaderProps {
 	name: string;
 	handle: string;
+	creatorId?: string | number | null;
 	avatarUrl?: string;
 	isVerified?: boolean;
 	className?: string;
@@ -17,6 +18,7 @@ interface CreatorProfileHeaderProps {
 const CreatorProfileHeader: React.FC<CreatorProfileHeaderProps> = ({
 	name,
 	handle,
+	creatorId,
 	avatarUrl,
 	isVerified,
 	className,
@@ -44,7 +46,7 @@ const CreatorProfileHeader: React.FC<CreatorProfileHeaderProps> = ({
 		>
 			<div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
 				<div className="size-24 overflow-hidden rounded-2xl border-4 border-white/10 shadow-xl md:size-32">
-					<CreatorInitialsAvatar name={name} imageSrc={avatarUrl} />
+					<CreatorInitialsAvatar name={name} creatorId={creatorId} imageSrc={avatarUrl} />
 				</div>
 				<div className="space-y-1">
 					<div className="flex items-center gap-2">
