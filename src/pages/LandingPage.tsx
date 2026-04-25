@@ -19,6 +19,10 @@ import CreatorBreadcrumb from '@/components/common/CreatorBreadcrumb';
 import CreatorProfileHeader from '@/components/common/CreatorProfileHeader';
 import TransactionRetryNotice from '@/components/common/TransactionRetryNotice';
 import EmptyTransactionTimelineState from '@/components/common/EmptyTransactionTimelineState';
+import TradeDialog, { type TradeSide } from '@/components/common/TradeDialog';
+import PendingTxModal from '@/components/common/PendingTxModal';
+import showToast from '@/utils/toast.util';
+import { formatCompactNumber, formatNumber } from '@/utils/numberFormat.utils';
 
 const FEATURED_CREATOR_FACTS = [
 	{ label: 'Membership', value: 'Collectors Circle' },
@@ -120,6 +124,11 @@ function LandingPage() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [activeProfileTab, setActiveProfileTab] = useState('overview');
+	const [featuredHoldings, setFeaturedHoldings] = useState(3);
+	const [tradeSide, setTradeSide] = useState<TradeSide>('buy');
+	const [tradeDialogOpen, setTradeDialogOpen] = useState(false);
+	const [tradeSubmitting, setTradeSubmitting] = useState(false);
+	const [pendingTxOpen, setPendingTxOpen] = useState(false);
 	const [sortOption, setSortOption] = useState<SortOption>(() => {
 		if (typeof window === 'undefined') return 'featured';
 		const saved = window.localStorage.getItem(CREATOR_SORT_KEY) as SortOption | null;
@@ -215,8 +224,49 @@ function LandingPage() {
 
 	const handleResetSearch = () => setSearchQuery('');
 
+	const openTradeDialog = (side: TradeSide) => {
+		setTradeSide(side);
+		setTradeDialogOpen(true);
+	};
+
+	const handleConfirmTrade = async (amount: number) => {
+		const previousHoldings = featuredHoldings;
+		setTradeSubmitting(true);
+		setPendingTxOpen(true);
+
+		try {
+			showToast.loading(
+				tradeSide === 'buy'
+					? `Submitting buy for ${amount} key${amount === 1 ? '' : 's'}...`
+					: `Submitting sell for ${amount} key${amount === 1 ? '' : 's'}...`
+			);
+
+			await new Promise<void>(resolve => window.setTimeout(resolve, 900));
+
+			setFeaturedHoldings(current =>
+				tradeSide === 'buy' ? current + amount : Math.max(0, current - amount)
+			);
+
+			await new Promise<void>(resolve => window.setTimeout(resolve, 250));
+
+			showToast.transactionSuccess(
+				'Trade confirmed',
+				tradeSide === 'buy'
+					? `Holdings refreshed: +${formatNumber(amount)} keys.`
+					: `Holdings refreshed: -${formatNumber(amount)} keys.`
+			);
+			setTradeDialogOpen(false);
+		} catch {
+			setFeaturedHoldings(previousHoldings);
+			showToast.error('Trade failed. Holdings have been restored.');
+		} finally {
+			setTradeSubmitting(false);
+			setPendingTxOpen(false);
+		}
+	};
+
 	return (
-		<main className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(160deg,#08111f_0%,#10213b_45%,#f0b14d_160%)] px-6 py-12 md:px-12">
+		<main className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(160deg,#08111f_0%,#10213b_45%,#f0b14d_160%)] px-6 pt-12 pb-28 md:px-12 md:pb-12">
 			<div className="absolute left-[-4rem] top-[10%] size-72 rounded-full bg-amber-300/20 blur-[100px]" />
 			<div className="absolute bottom-[8%] right-[-3rem] size-72 rounded-full bg-emerald-300/15 blur-[100px]" />
 			<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,186,73,0.1),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(74,222,128,0.08),transparent_35%)]" />
@@ -382,19 +432,83 @@ function LandingPage() {
 						</div>
 					</div>
 					<div className="space-y-3">
-						<CreatorProfileInfoGrid items={FEATURED_CREATOR_FACTS} />
+						<CreatorProfileInfoGrid
+							items={[
+								...FEATURED_CREATOR_FACTS,
+								{
+									label: 'Your holdings',
+									value: `${formatNumber(featuredHoldings)} keys`,
+								},
+							]}
+						/>
 						<CreatorLabeledStatRow
 							label="Creator Share Supply"
-							value="250 shares available"
+							value={`${formatCompactNumber(250)} shares available`}
 						/>
+						<div className="hidden md:flex items-center gap-3">
+							<Button className="rounded-xl" onClick={() => openTradeDialog('buy')}>
+								Buy
+							</Button>
+							<Button
+								className="rounded-xl"
+								variant="outline"
+								onClick={() => openTradeDialog('sell')}
+							>
+								Sell
+							</Button>
+						</div>
 					</div>
 				</MarketplaceSection>
+
+				<div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-slate-950/85 backdrop-blur-md md:hidden">
+					<div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-6 py-3">
+						<div className="min-w-0">
+							<div className="text-xs font-bold uppercase tracking-[0.22em] text-white/40">
+								Your holdings
+							</div>
+							<div className="truncate font-jakarta text-sm font-bold text-white/85">
+								{formatNumber(featuredHoldings)} keys
+							</div>
+						</div>
+						<div className="flex items-center gap-2">
+							<Button className="rounded-xl" size="sm" onClick={() => openTradeDialog('buy')}>
+								Buy
+							</Button>
+							<Button
+								className="rounded-xl"
+								size="sm"
+								variant="outline"
+								onClick={() => openTradeDialog('sell')}
+							>
+								Sell
+							</Button>
+						</div>
+					</div>
+				</div>
 
 				<SectionDivider title="Transaction timeline pattern" spacing="relaxed" />
 				<MarketplaceSection spacing="relaxed">
 					<EmptyTransactionTimelineState />
 				</MarketplaceSection>
 			</div>
+
+			<TradeDialog
+				open={tradeDialogOpen}
+				side={tradeSide}
+				creatorName="Alex Rivers"
+				availableHoldings={featuredHoldings}
+				isSubmitting={tradeSubmitting}
+				onOpenChange={setTradeDialogOpen}
+				onConfirm={handleConfirmTrade}
+			/>
+			<PendingTxModal
+				open={pendingTxOpen}
+				onOpenChange={setPendingTxOpen}
+				isLoading={true}
+				blockDismissal={true}
+				title="Confirming trade"
+				description="Waiting for Stellar confirmation, then refreshing holdings."
+			/>
 		</main>
 	);
 }
