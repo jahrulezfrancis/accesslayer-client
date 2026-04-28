@@ -59,6 +59,7 @@ const TradeDialog: React.FC<TradeDialogProps> = ({
 			<DialogContent
 				className="max-w-md"
 				showCloseButton={!isSubmitting}
+				showEscapeHint={!isSubmitting}
 				onOpenAutoFocus={event => {
 					event.preventDefault();
 					amountInputRef.current?.focus();
@@ -154,4 +155,3 @@ const TradeDialog: React.FC<TradeDialogProps> = ({
 };
 
 export default TradeDialog;
-
