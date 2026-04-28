@@ -52,6 +52,7 @@ const PendingTxModal: React.FC<PendingTxModalProps> = ({
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent
 				showCloseButton={!(blockDismissal && isLoading)}
+				showEscapeHint={!(blockDismissal && isLoading)}
 				className="max-w-sm"
 				// Prevent closing via Escape when dismissal is blocked
 				onEscapeKeyDown={(e: KeyboardEvent) => {
