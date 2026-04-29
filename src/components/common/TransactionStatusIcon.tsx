@@ -34,10 +34,12 @@ const TransactionStatusIcon: React.FC<TransactionStatusIconProps> = ({
 			className={cn(
 				'inline-flex items-center justify-center rounded-full p-1.5',
 				statusStyles[status],
+				status === 'pending' &&
+					'motion-safe:animate-pulse motion-reduce:animate-none',
 				className
 			)}
 		>
-			<Icon className={cn('size-4', status === 'pending' && 'animate-pulse')} />
+			<Icon className="size-4" />
 		</span>
 	);
 };

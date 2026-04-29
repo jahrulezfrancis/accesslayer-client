@@ -21,11 +21,10 @@ import Change24hBadge from '@/components/common/Change24hBadge';
 import KeySupplyBadge from '@/components/common/KeySupplyBadge';
 import CreatorListRowDivider from '@/components/common/CreatorListRowDivider';
 import BuyActionHelperText from '@/components/common/BuyActionHelperText';
-import CreatorLabeledStatRow from '@/components/common/CreatorLabeledStatRow';
 import CreatorBio from '@/components/common/CreatorBio';
 import { useTransactionTelemetry } from '@/hooks/useTransactionTelemetry';
 import { useNetworkMismatch } from '@/hooks/useNetworkMismatch';
-import { formatCompactNumber, formatNumber, formatFollowerCount } from '@/utils/numberFormat.utils';
+import { formatCompactNumber, formatNumber } from '@/utils/numberFormat.utils';
 
 interface CreatorCardProps {
 	creator: Course;
@@ -249,7 +248,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 							: transactionState === 'failed'
 								? 'Retry Purchase'
 								: 'Buy Key'}
-				</Button>
+				</AsyncButton>
 			</div>
 
 			<BuyActionHelperText
