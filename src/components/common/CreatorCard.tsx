@@ -134,6 +134,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ creator, className }) => {
 						valueClassName="font-grotesque text-base font-black text-amber-400"
 					/>
 				</div>
+				<CreatorListRowDivider className="my-4" />
 				<CreatorSocialLinksList
 					handle={creator.socialHandle}
 					className="mt-4"
